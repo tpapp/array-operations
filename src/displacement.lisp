@@ -96,6 +96,8 @@ displacing, may share structure."
   "The opposite of SUBARRAYS.  If ELEMENT-TYPE is not given, it is inferred
 from the first element of array, which also determines the dimensions.  If
 that element is not an array, the original ARRAY is returned as it is."
+  (unless (arrayp array)
+    (return-from combine array))
   (let ((first (row-major-aref array 0)))
     (if (arrayp first)
         (let* ((dimensions (array-dimensions array))
@@ -118,7 +120,8 @@ that element is not an array, the original ARRAY is returned as it is."
 
 (declaim (inline (setf subvec)))
 (defun (setf subvec) (value vector start &optional (end (length vector)))
-  ;; just a synonym for (setf subseq), defined for symmetry
+  ;; just a synonym for (setf subseq), except for checking the length
+  (assert (length= value (- end start)))
   (setf (subseq vector start end) value))
 
 ;;; reshaping
