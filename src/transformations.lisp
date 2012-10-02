@@ -66,6 +66,16 @@ an error if necessary."
         when (zerop f)
         collect index))
 
+(defun invert-permutation (permutation)
+  "Invert a permutation."
+  (check-permutation permutation)
+  (aprog1 (make-array (length permutation) :element-type 'fixnum)
+    (map nil (let ((index 0))
+               (lambda (p)
+                 (setf (aref it p) index)
+                 (incf index)))
+         permutation)))
+
 (defun permute (array permutation)
   "Return ARRAY with the axes permuted by PERMUTATION, which is a sequence of
 indexes.  Specifically, an array A is transformed to B, where

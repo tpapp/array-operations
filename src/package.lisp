@@ -24,6 +24,7 @@
    #:permutation-incompatible-rank
    #:valid-permutation?
    #:complement-permutation
+   #:invert-permutation
    #:permute
    #:each*
    #:each
