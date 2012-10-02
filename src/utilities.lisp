@@ -45,3 +45,14 @@ is modified."
          (dotimes (,position (product ,dimensions))
            ,@body
            (,increment ,last))))))
+
+(defmacro walk-subscripts-list ((dimensions subscripts
+                                 &optional (position (gensym "POSITION")))
+                                &body body)
+  "Like WALK-SUBSCRIPTS, but SUBSCRIPTS is a newly created list for each
+position that does not share structure and can be freely used/modified/kept
+etc."
+  (with-unique-names (subscripts-vector)
+    `(walk-subscripts (,dimensions ,subscripts-vector ,position)
+       (let ((,subscripts (coerce ,subscripts-vector 'list)))
+         ,@body))))

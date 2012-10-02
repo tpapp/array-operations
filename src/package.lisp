@@ -5,7 +5,8 @@
   (:nicknames #:ao)
   (:shadow #:flatten)
   (:export ; utilities
-   #:walk-subscripts)
+   #:walk-subscripts
+   #:walk-subscripts-list)
   (:export ; displacement
    #:displace
    #:flatten
@@ -20,6 +21,7 @@
    #:generate
    #:permutation-repeated-index
    #:permutation-invalid-index
+   #:permutation-incompatible-rank
    #:valid-permutation?
    #:complement-permutation
    #:permute

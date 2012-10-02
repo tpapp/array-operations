@@ -15,11 +15,11 @@
        (walk-subscripts (dimensions subscripts position)
          (setf (row-major-aref it position) (funcall function position))))
       (:subscripts
-       (walk-subscripts (dimensions subscripts position)
+       (walk-subscripts-list (dimensions subscripts position)
          (setf (row-major-aref it position)
                (funcall function subscripts))))
       (:position-and-subscripts
-       (walk-subscripts (dimensions subscripts position)
+       (walk-subscripts-list (dimensions subscripts position)
          (setf (row-major-aref it position)
                (funcall function position subscripts)))))))
 
@@ -36,6 +36,9 @@
 (define-condition permutation-invalid-index (error)
   ((index :initarg :index)))
 
+(define-condition permutation-incompatible-rank (error)
+  ())
+
 (defun permutation-flags% (permutation &optional (rank (length permutation)))
   (aprog1 (make-array rank
                       :element-type 'bit :initial-element 0)
@@ -47,9 +50,15 @@
                (setf (aref it p) 1))
          permutation)))
 
-(defun valid-permutation? (permutation)
-  "Test if PERMUTATION is a valid permutation (of rank RANK)."
-  (every #'plusp (permutation-flags% permutation)))
+(defun check-permutation (permutation
+                          &optional (rank (length permutation) rank?))
+  "Check if PERMUTATION is a valid permutation (of the given RANK), and signal
+an error if necessary."
+  (when rank?
+    (assert (= rank (length permutation)) ()
+            'permutation-incompatible-rank ))
+  (assert (every #'plusp (permutation-flags% permutation)) ()
+          'permutation-incompatible-rank))
 
 (defun complement-permutation (permutation rank)
   (loop for f across (permutation-flags% permutation rank)
@@ -67,7 +76,7 @@ A is ARRAY, and P is the axes.
 Permute array axes.  Elements of the sequence PERMUTATION indicate where
 that particular axis is coming from in ARRAY.  Axes in permutation can be
 repeated."
-  (assert (valid-permutation? permutation))
+  (check-permutation permutation (array-rank array))
   (let+ ((source-dimensions (array-dimensions array))
          (target-dimensions (map 'list (curry #'elt source-dimensions)
                                  permutation))
