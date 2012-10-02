@@ -25,6 +25,7 @@
    #:valid-permutation?
    #:complement-permutation
    #:invert-permutation
+   #:identity-permutation?
    #:permute
    #:each*
    #:each

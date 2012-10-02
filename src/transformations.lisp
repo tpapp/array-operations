@@ -76,6 +76,16 @@ an error if necessary."
                  (incf index)))
          permutation)))
 
+(defun identity-permutation? (permutation)
+  "Test if PERMUTATION is the identity permutation, ie a sequence of
+consecutive integers starting at 0.  Note that permutation is otherwise not
+checked, ie it may not be a permutation."
+  (every (let ((index 0))
+           (lambda (p)
+             (prog1 (= index p)
+               (incf index))))
+         permutation))
+
 (defun permute (array permutation)
   "Return ARRAY with the axes permuted by PERMUTATION, which is a sequence of
 indexes.  Specifically, an array A is transformed to B, where
@@ -85,16 +95,18 @@ indexes.  Specifically, an array A is transformed to B, where
 P is the permutation.
 
 Array element type is preserved."
-  (let+ ((rank (array-rank array))
-         (dimensions (array-dimensions array))
-         ((&flet map-subscripts (subscripts-vector)
-            (map 'list (curry #'aref subscripts-vector) permutation))))
-    (check-permutation permutation rank)
-    (aprog1 (make-array (map-subscripts (coerce dimensions 'vector))
-                        :element-type (array-element-type array))
-      (walk-subscripts (dimensions subscripts position)
-        (setf (apply #'aref it (map-subscripts subscripts))
-              (row-major-aref array position))))))
+  (if (identity-permutation? permutation)
+      array
+      (let+ ((rank (array-rank array))
+             (dimensions (array-dimensions array))
+             ((&flet map-subscripts (subscripts-vector)
+                (map 'list (curry #'aref subscripts-vector) permutation))))
+        (check-permutation permutation rank)
+        (aprog1 (make-array (map-subscripts (coerce dimensions 'vector))
+                            :element-type (array-element-type array))
+          (walk-subscripts (dimensions subscripts position)
+            (setf (apply #'aref it (map-subscripts subscripts))
+                  (row-major-aref array position)))))))
 
 
 
@@ -111,6 +123,7 @@ Array element type is preserved."
 
 (defun margin* (element-type function array inner
                 &optional (outer (complement-permutation inner (array-rank array))))
+  ()
   (each* element-type function
          (split (permute array (append outer inner)) (length outer))))
 
