@@ -61,7 +61,7 @@ an error if necessary."
           'permutation-incompatible-rank))
 
 (defun complement-permutation (permutation rank)
-  (loop for f across (permutation-flags% permutation rank)
+  (loop for f across (permutation-flags% (ensure-list permutation) rank)
         for index from 0
         when (zerop f)
         collect index))
@@ -123,9 +123,10 @@ Array element type is preserved."
 
 (defun margin* (element-type function array inner
                 &optional (outer (complement-permutation inner (array-rank array))))
-  ()
-  (each* element-type function
-         (split (permute array (append outer inner)) (length outer))))
+  (let ((outer (ensure-list outer)))
+    (each* element-type function
+           (split (permute array (append outer (ensure-list inner)))
+                  (length outer)))))
 
 (defun margin (function array inner
                &optional (outer (complement-permutation inner (array-rank array))))

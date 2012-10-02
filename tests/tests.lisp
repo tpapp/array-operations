@@ -29,6 +29,10 @@
                    (4 . #(1 1))
                    (5 . #(1 2))))))
 
+
+
+;;; displacement
+
 (addtest displacement
   (let ((a #2A((0 1) (2 3) (4 5))))
     ;; displace
@@ -70,6 +74,10 @@
     ;; reshape
     (ensure-same (ao:reshape a '(2 3)) #2A((0 1 2) (3 4 5)))))
 
+
+
+;;; transformations
+
 (addtest generate
   (let ((a (ao:generate #'identity '(3 2) :position))
         (b (ao:generate #'identity '(2 3) :subscripts)))
@@ -109,3 +117,13 @@ SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
   (let ((a (ao:generate #'identity '(2 2 2) :position)))
     (ensure-same (ao:permute a '(2 0 1))
                  (permute% a (lambda (a b c) (list c a b))))))
+
+(addtest each
+  (let ((a (ao:generate #'identity '(2 5) :position)))
+    (ensure-same (ao:each #'1+ a) (ao:generate #'1+ '(2 5) :position)))
+  (ensure-same (ao:each #'- #(2 3 5 7) #(1 2 3 4)) #(1 1 2 3)))
+
+(addtest margin
+  (let ((a (ao:generate #'identity '(3 5) :position)))
+    (ensure-same (ao:margin (curry #'reduce #'+) a 1) #(10 35 60))
+    (ensure-same (ao:margin (curry #'reduce #'*) a 0) #(0 66 168 312 504))))
