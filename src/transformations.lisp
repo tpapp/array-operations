@@ -77,7 +77,6 @@ P is the permutation.
 Array element type is preserved."
   (let+ ((rank (array-rank array))
          (dimensions (array-dimensions array))
-         ;; (buffer (make-list rank :initial-element 0))
          ((&flet map-subscripts (subscripts-vector)
             (map 'list (curry #'aref subscripts-vector) permutation))))
     (check-permutation permutation rank)
