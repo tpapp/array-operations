@@ -67,29 +67,25 @@ an error if necessary."
         collect index))
 
 (defun permute (array permutation)
-  "Return an array B, where
+  "Return ARRAY with the axes permuted by PERMUTATION, which is a sequence of
+indexes.  Specifically, an array A is transformed to B, where
 
-  B[b_1,...,b_n] = A[a_1,...,a_n] with a_{P[i]}=b_i
+  B[b_1,...,b_n] = A[a_1,...,a_n] with b_i=a_{P[i]}
 
-A is ARRAY, and P is the axes.
+P is the permutation.
 
-Permute array axes.  Elements of the sequence PERMUTATION indicate where
-that particular axis is coming from in ARRAY.  Axes in permutation can be
-repeated."
-  (check-permutation permutation (array-rank array))
-  (let+ ((source-dimensions (array-dimensions array))
-         (target-dimensions (map 'list (curry #'elt source-dimensions)
-                                 permutation))
-         (target (make-array target-dimensions
-                             :element-type (array-element-type array)))
-         (buffer (make-list (array-rank array))))
-    (walk-subscripts (target-dimensions subscripts position)
-      (setf (row-major-aref target position)
-            (apply #'aref array
-                   (map-into buffer
-                             (lambda (p) (aref subscripts p))
-                             permutation))))
-    target))
+Array element type is preserved."
+  (let+ ((rank (array-rank array))
+         (dimensions (array-dimensions array))
+         ;; (buffer (make-list rank :initial-element 0))
+         ((&flet map-subscripts (subscripts-vector)
+            (map 'list (curry #'aref subscripts-vector) permutation))))
+    (check-permutation permutation rank)
+    (aprog1 (make-array (map-subscripts (coerce dimensions 'vector))
+                        :element-type (array-element-type array))
+      (walk-subscripts (dimensions subscripts position)
+        (setf (apply #'aref it (map-subscripts subscripts))
+              (row-major-aref array position))))))
 
 
 

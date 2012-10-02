@@ -69,3 +69,38 @@
       (ensure-error (setf (ao:subvec b 3 5) #(7))))
     ;; reshape
     (ensure-same (ao:reshape a '(2 3)) #2A((0 1 2) (3 4 5)))))
+
+(addtest generate
+  (let ((a (ao:generate #'identity '(3 2) :position))
+        (b (ao:generate #'identity '(2 3) :subscripts)))
+    (ensure-same a #2A((0 1)
+                       (2 3)
+                       (4 5)))
+    (ensure-same b #2A(((0 0) (0 1) (0 2))
+                       ((1 0) (1 1) (1 2))))
+    (ensure-same (ao:generate #'cons '(1 2) :position-and-subscripts)
+                 #2A(((0 0 0) (1 0 1))))))
+
+(defun permute% (array subscripts-mapping)
+  "Helper function for testing permutation.  Permutes ARRAY using
+SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
+  (let+ ((dimensions (array-dimensions array))
+         ((&flet map% (subscripts)
+            (apply subscripts-mapping subscripts))))
+    (aprog1 (make-array (map% dimensions)
+                        :element-type (array-element-type array))
+      (ao:walk-subscripts-list (dimensions subscripts)
+        (setf (apply #'aref it (map% subscripts))
+              (apply #'aref array subscripts))))))
+
+(addtest permute
+  (let ((a (ao:generate #'identity '(3 2) :position)))
+    (ensure-same (ao:permute a '(0 1)) a)
+    (ensure-same (ao:permute a '(1 0)) #2A((0 2 4)
+                                           (1 3 5)))
+    (ensure-condition ao:permutation-repeated-index (ao:permute a '(0 0)))
+    (ensure-condition ao:permutation-invalid-index (ao:permute a '(2 0)))
+    (ensure-condition ao:permutation-incompatible-rank (ao:permute a '(0))))
+  (let ((a (ao:generate #'identity '(2 2 2) :position)))
+    (ensure-same (ao:permute a '(2 0 1))
+                 (permute% a (lambda (a b c) (list c a b))))))
