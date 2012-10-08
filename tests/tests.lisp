@@ -92,7 +92,7 @@
     (ensure-same (ao:generate #'cons '(1 2) :position-and-subscripts)
                  #2A(((0 0 0) (1 0 1))))))
 
-(defun permute% (array subscripts-mapping)
+(defun permute% (subscripts-mapping array)
   "Helper function for testing permutation.  Permutes ARRAY using
 SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
   (let+ ((dimensions (array-dimensions array))
@@ -121,20 +121,20 @@ SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
 
 (addtest permute
   (let ((a (ao:generate #'identity '(3 2) :position)))
-    (ensure-same (ao:permute a '(0 1)) a)
-    (ensure-same (ao:permute a '(1 0)) #2A((0 2 4)
+    (ensure-same (ao:permute '(0 1) a) a)
+    (ensure-same (ao:permute '(1 0) a) #2A((0 2 4)
                                            (1 3 5)))
-    (ensure-condition ao:permutation-repeated-index (ao:permute a '(0 0)))
-    (ensure-condition ao:permutation-invalid-index (ao:permute a '(2 0)))
-    (ensure-condition ao:permutation-incompatible-rank (ao:permute a '(0))))
-  (let ((p (alexandria:shuffle (vector 0 1 2 3 4)))
+    (ensure-condition ao:permutation-repeated-index (ao:permute '(0 0) a))
+    (ensure-condition ao:permutation-invalid-index (ao:permute '(2 0) a))
+    (ensure-condition ao:permutation-incompatible-rank (ao:permute '(0) a)))
+  (let ((p (alexandria:shuffle (list 0 1 2 3 4)))
         (a (ao:generate (lambda () (random 100)) '(2 3 4 5 6)))
         (*lift-equality-test* #'equalp))
     (ensure-same (ao:invert-permutation (ao:invert-permutation p)) p)
-    (ensure-same (ao:permute (ao:permute a p) (ao:invert-permutation p)) a))
+    (ensure-same (ao:permute (ao:invert-permutation p) (ao:permute p a)) a))
   (let ((a (ao:generate #'identity '(2 2 2) :position)))
-    (ensure-same (ao:permute a '(2 0 1))
-                 (permute% a (lambda (a b c) (list c a b))))))
+    (ensure-same (ao:permute '(2 0 1) a)
+                 (permute% (lambda (a b c) (list c a b)) a))))
 
 (addtest each
   (let ((a (ao:generate #'identity '(2 5) :position)))
@@ -145,3 +145,25 @@ SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
   (let ((a (ao:generate #'identity '(3 5) :position)))
     (ensure-same (ao:margin (curry #'reduce #'+) a 1) #(10 35 60))
     (ensure-same (ao:margin (curry #'reduce #'*) a 0) #(0 66 168 312 504))))
+
+
+
+;;; stack
+
+(addtest stack0
+  (ensure-same (ao:stack 0 #(0 1 2 3) #(4 5 6)) #(0 1 2 3 4 5 6))
+  (ensure-same (ao:stack 0 #2A((0 1)
+                               (2 3))
+                         #2A((5 7)))
+               #2A((0 1)
+                   (2 3)
+                   (5 7)))
+  (ensure-error (ao:stack 0 #(0 1) #2A((0 1 2 3))))
+  (ensure-error (ao:stack 0 #2A((1)) #2A((0 1)))))
+
+(addtest stack
+  (ensure-same (ao:stack 1 #2A((0 1)
+                               (2 3))
+                         #2A((5) (9)))
+               #2A((0 1 5)
+                   (2 3 9))))

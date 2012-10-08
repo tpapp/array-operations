@@ -32,4 +32,7 @@
    #:each*
    #:each
    #:margin*
-   #:margin))
+   #:margin)
+  (:export ; stack
+   #:stack*
+   #:stack))
