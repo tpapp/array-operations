@@ -55,6 +55,9 @@
     (ensure-same (ao:partition a 1) #2A((2 3) (4 5)))
     (ensure-same (ao:partition a 1 2) #2A((2 3)))
     (ensure-error (ao:partition a 0 9))
+    (let ((b (copy-array a)))
+      (setf (ao:partition b 1) #2A((11 13) (17 19)))
+      (ensure-same b #2A((0 1) (11 13) (17 19))))
     ;; combine
     (ensure-same (ao:combine (ao:split a 0)) a)
     (ensure-same (ao:combine (ao:split a 1)) a)

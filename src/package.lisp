@@ -11,6 +11,7 @@
    #:displace
    #:flatten
    #:split
+   #:copy-into
    #:sub
    #:partition
    #:combine

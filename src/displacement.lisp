@@ -76,13 +76,19 @@ displacing, may share structure."
             (apply #'aref array subscripts)))
       array))
 
+(defun copy-into (target source)
+  "Copy SOURCE into TARGET, for array arguments of compatible
+dimensions (checked).  Return TARGET, making the implementation of the
+semantics of SETF easy."
+  (assert (same-dimensions? target source))
+  (replace (flatten target) (flatten source))
+  target)
+
 (defun (setf sub) (value array &rest subscripts)
   (let+ (((&values subarray atom?) (apply #'sub array subscripts)))
     (if atom?
         (setf (apply #'aref array subscripts) value)
-        (prog1 value
-          (assert (same-dimensions? value subarray))
-          (replace (flatten subarray) (flatten value))))))
+        (copy-into subarray value))))
 
 (defun partition (array start &optional (end (array-dimension array 0)))
   "Return a subset of the array, on the first indexes between START and END."
@@ -91,6 +97,10 @@ displacing, may share structure."
     (assert (and (<= 0 start) (< start end) (<= end d0)))
     (displace array (cons (- end start) (cdr (array-dimensions array)))
               (* start stride))))
+
+(defun (setf partition) (value array start
+                         &optional (end (array-dimension array 0)))
+  (copy-into (partition array start end) value))
 
 (defun combine (array &optional element-type)
   "The opposite of SUBARRAYS.  If ELEMENT-TYPE is not given, it is inferred
