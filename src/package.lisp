@@ -25,6 +25,7 @@
    #:permutation-incompatible-rank
    #:valid-permutation?
    #:complement-permutation
+   #:complete-permutation
    #:invert-permutation
    #:identity-permutation?
    #:permute

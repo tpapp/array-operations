@@ -83,6 +83,11 @@ single element."
         when (zerop f)
         collect index))
 
+(defun complete-permutation (permutation rank)
+  "Return a completed version of permutation, appending it to its complement."
+  (let ((permutation (ensure-list permutation)))
+    (append permutation (complement-permutation permutation rank))))
+
 (defun invert-permutation (permutation)
   "Invert a permutation."
   (check-permutation permutation)

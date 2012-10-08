@@ -104,6 +104,21 @@ SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
         (setf (apply #'aref it (map% subscripts))
               (apply #'aref array subscripts))))))
 
+(addtest permutations
+  (ensure-same (ao::permutation-flags '(0 3 2) 5) #*10110)
+  (ensure-error (ao::check-permutation '(0 1 1)))
+  (ensure-same (ao:complement-permutation '(3 2) 5) '(0 1 4))
+  (ensure-same (ao:complete-permutation '(3 2) 5) '(3 2 0 1 4))
+  (ensure-same (ao:invert-permutation '(0 1 2 3)) '(0 1 2 3))
+  (ensure-same (ao:invert-permutation '(3 0 2 1)) '(1 3 2 0))
+  (let+ (((&flet invert-twice (permutation)
+            (ao:invert-permutation (ao:invert-permutation permutation))))
+         ((&macrolet ensure-same-i2 (permutation)
+            (once-only (permutation)
+              `(ensure-same ,permutation (invert-twice ,permutation))))))
+    (ensure-same-i2 '(0 1 2 3))
+    (ensure-same-i2 '(3 0 2 1))))
+
 (addtest permute
   (let ((a (ao:generate #'identity '(3 2) :position)))
     (ensure-same (ao:permute a '(0 1)) a)
