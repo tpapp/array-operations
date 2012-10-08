@@ -169,3 +169,11 @@ on demand."
   (let* ((size (array-total-size array))
          (dimensions (fill-in-dimensions dimensions (- size offset))))
     (displace array dimensions offset)))
+
+(defun reshape-col (array)
+  "Array reshaped as an Nx1 matrix."
+  (reshape array '(t 1)))
+
+(defun reshape-row (array)
+  "Array reshaped as an 1xN matrix."
+  (reshape array '(1 t)))

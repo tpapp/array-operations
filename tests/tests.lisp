@@ -74,8 +74,10 @@
       (ensure-same (setf (ao:subvec b 3 5) #(7 9)) #(7 9))
       (ensure-same b #(0 1 2 7 9 5))
       (ensure-error (setf (ao:subvec b 3 5) #(7))))
-    ;; reshape
-    (ensure-same (ao:reshape a '(2 3)) #2A((0 1 2) (3 4 5)))))
+    ;; reshape & variances
+    (ensure-same (ao:reshape a '(2 3)) #2A((0 1 2) (3 4 5)))
+    (ensure-same (ao:reshape-row a) #2A((0 1 2 3 4 5)))
+    (ensure-same (ao:reshape-col a) #2A((0) (1) (2) (3) (4) (5)))))
 
 
 

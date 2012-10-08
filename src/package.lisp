@@ -16,7 +16,9 @@
    #:partition
    #:combine
    #:subvec
-   #:reshape)
+   #:reshape
+   #:reshape-col
+   #:reshape-row)
   (:export ; transformations
    #:generate*
    #:generate
