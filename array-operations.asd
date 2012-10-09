@@ -12,7 +12,8 @@
   :components ((:file "package")
                (:file "utilities")
                (:file "displacement")
-               (:file "transformations")))
+               (:file "transformations")
+               (:file "stack")))
 
 (asdf:defsystem #:array-operations-tests
   :serial t
