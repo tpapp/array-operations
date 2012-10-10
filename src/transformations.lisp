@@ -168,3 +168,34 @@ given ELEMENT-TYPE."
                                                         (array-rank array))))
   "Like MARGIN*, with ELEMENT-TYPE T."
   (margin* t function array inner outer))
+
+
+
+;;; recycle
+
+(defun recycle (object &key inner outer
+                            (element-type (if (arrayp object)
+                                              (array-element-type object)
+                                              t)))
+  "Recycle elements of object, extending the dimensions by outer (repeating
+OBJECT) and inner (repeating each element of OBJECT).  When both INNER and
+OUTER are nil, the OBJECT is returned as is.  Non-array objects are intepreted
+as rank 0 arrays, following the usual semantics."
+  (if (or inner outer)
+      (let ((inner (ensure-list inner))
+            (outer (ensure-list outer)))
+        (if (arrayp object)
+            (let ((dimensions (array-dimensions object)))
+              (aprog1 (make-array (append outer dimensions inner)
+                                  :element-type element-type)
+                (let* ((outer-size (product outer))
+                       (size (product dimensions))
+                       (inner-size (product inner))
+                       (reshaped (reshape it (list outer-size size inner-size))))
+                  (loop for outer-index below outer-size
+                        do (loop for index below size
+                                 do (fill (sub reshaped outer-index index)
+                                          (row-major-aref object index)))))))
+            (make-array (append outer inner) :initial-element object
+                                             :element-type element-type)))
+      object))

@@ -34,7 +34,8 @@
    #:each*
    #:each
    #:margin*
-   #:margin)
+   #:margin
+   #:recycle)
   (:export ; stack
    #:stack*
    #:stack))

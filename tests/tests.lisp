@@ -148,6 +148,16 @@ SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
     (ensure-same (ao:margin (curry #'reduce #'+) a 1) #(10 35 60))
     (ensure-same (ao:margin (curry #'reduce #'*) a 0) #(0 66 168 312 504))))
 
+(addtest recycle
+  (ensure-same (ao:recycle 1 :inner '(2 1) :outer '(3 4))
+               (make-array '(3 4 2 1) :initial-element 1))
+  (let ((a (ao:generate #'identity '(2 3) :position)))
+    (ensure-same (ao:recycle a) a)
+    (ensure-same (ao:recycle a :inner 2)
+                 (ao:generate (lambda (p) (floor p 2)) '(2 3 2) :position))
+    (ensure-same (ao:recycle a :inner 1 :outer 2)
+                 (ao:generate (lambda (p) (rem p 6)) '(2 2 3 1) :position))))
+
 
 
 ;;; stack
