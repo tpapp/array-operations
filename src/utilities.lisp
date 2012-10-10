@@ -17,6 +17,19 @@
              (equal dimensions (array-dimensions array)))
            arrays)))
 
+
+(defun ensure-dimensions (object)
+  "Return a list of dimensions corresponding to OBJECT.  Positive integers are
+treated as dimensions of rank 1, lists are returned as they are, and arrays
+are queried for their dimensions.
+
+OBJECTS accepted by this function as valid dimensions are called `dimension
+specifications' in this library."
+  (aetypecase object
+    ((integer 0) (list it))
+    (list it)
+    (array (array-dimensions it))))
+
 (defmacro walk-subscripts ((dimensions subscripts
                             &optional (position (gensym "POSITION")))
                            &body body)
@@ -26,25 +39,25 @@ row-major index.  Consequences are undefined if either POSITION or SUBSCRIPTS
 is modified."
   (check-type position symbol)
   (check-type subscripts symbol)
-  (with-unique-names (rank last increment)
-    (once-only (dimensions)
-      `(let+ ((,rank (length ,dimensions))
-              (,dimensions (make-array ,rank
-                                       :element-type 'fixnum
-                                       :initial-contents ,dimensions))
-              (,last (1- ,rank))
-              (,subscripts (make-array ,rank
-                                       :element-type 'fixnum
-                                       :initial-element 0))
-              ((&labels ,increment (index)
-                 (unless (minusp index)
-                   (when (= (incf (aref ,subscripts index))
-                            (aref ,dimensions index))
-                     (setf (aref ,subscripts index) 0)
-                     (,increment (1- index)))))))
-         (dotimes (,position (product ,dimensions))
-           ,@body
-           (,increment ,last))))))
+  (with-unique-names (rank last increment dimensions-var)
+    `(let+ ((,dimensions-var (ensure-dimensions ,dimensions))
+            (,rank (length ,dimensions-var))
+            (,dimensions-var (make-array ,rank
+                                         :element-type 'fixnum
+                                         :initial-contents ,dimensions-var))
+            (,last (1- ,rank))
+            (,subscripts (make-array ,rank
+                                     :element-type 'fixnum
+                                     :initial-element 0))
+            ((&labels ,increment (index)
+               (unless (minusp index)
+                 (when (= (incf (aref ,subscripts index))
+                          (aref ,dimensions-var index))
+                   (setf (aref ,subscripts index) 0)
+                   (,increment (1- index)))))))
+       (dotimes (,position (product ,dimensions-var))
+         ,@body
+         (,increment ,last)))))
 
 (defmacro walk-subscripts-list ((dimensions subscripts
                                  &optional (position (gensym "POSITION")))

@@ -6,7 +6,7 @@
 
 (defun displace (array dimensions &optional (offset 0))
   "Shorthand function for displacing an array."
-  (make-array dimensions
+  (make-array (ensure-dimensions dimensions)
               :displaced-to array
               :displaced-index-offset offset
               :element-type (array-element-type array)))
@@ -167,7 +167,7 @@ product equals size."
   "Reshape ARRAY using DIMENSIONS, one of which may be T which is calculated
 on demand."
   (let* ((size (array-total-size array))
-         (dimensions (fill-in-dimensions dimensions (- size offset))))
+         (dimensions (fill-in-dimensions (ensure-dimensions dimensions) (- size offset))))
     (displace array dimensions offset)))
 
 (defun reshape-col (array)
