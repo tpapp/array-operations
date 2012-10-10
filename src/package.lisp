@@ -8,6 +8,10 @@
    #:walk-subscripts
    #:walk-subscripts-list)
   (:export ; displacement
+   #:size
+   #:rank
+   #:dim
+   #:dims
    #:displace
    #:flatten
    #:split

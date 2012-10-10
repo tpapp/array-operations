@@ -2,6 +2,26 @@
 
 (in-package #:array-operations)
 
+;;; shorthand functions
+
+(declaim (inline size rank dim dims))
+
+(defun size (array)
+  "Return the total size of ARRAY."
+  (array-total-size array))
+
+(defun rank (array)
+  "Return the rank of ARRAY."
+  (array-rank array))
+
+(defun dim (array axis)
+  "Return specificed dimension of ARRAY."
+  (array-dimension array axis))
+
+(defun dims (array)
+  "Return the list of dimensions."
+  (array-dimensions array))
+
 ;;; displacement and flattening
 
 (defun displace (array dimensions &optional (offset 0))
