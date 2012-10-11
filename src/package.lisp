@@ -12,6 +12,8 @@
    #:rank
    #:dim
    #:dims
+   #:nrow
+   #:ncol
    #:displace
    #:flatten
    #:split
