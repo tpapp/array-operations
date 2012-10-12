@@ -183,8 +183,8 @@ OBJECT) and inner (repeating each element of OBJECT).  When both INNER and
 OUTER are nil, the OBJECT is returned as is.  Non-array objects are intepreted
 as rank 0 arrays, following the usual semantics."
   (if (or inner outer)
-      (let ((inner (ensure-list inner))
-            (outer (ensure-list outer)))
+      (let ((inner (ensure-dimensions inner))
+            (outer (ensure-dimensions outer)))
         (if (arrayp object)
             (let ((dimensions (array-dimensions object)))
               (aprog1 (make-array (append outer dimensions inner)
