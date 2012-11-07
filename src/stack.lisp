@@ -3,6 +3,7 @@
 (in-package #:array-operations)
 
 (defun stack*0 (element-type arrays)
+  "Stack arrays along the 0 axis, returning an array with given ELEMENT-TYPE."
   (let+ ((array-first (car arrays))
          (dim-rest (cdr (array-dimensions array-first)))
          (sum-first
@@ -23,9 +24,8 @@
                        cumulative-sum end))))))
 
 (defun stack* (element-type axis array &rest arrays)
-  "Stack array arguments along AXIS.  ELEMENT-TYPE determined the element-type
+  "Stack array arguments along AXIS.  ELEMENT-TYPE determines the element-type
 of the result."
-  (declare (optimize debug))
   (if arrays
       (let ((all-arrays (cons array arrays)))
         (if (= axis 0)
