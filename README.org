@@ -161,6 +161,19 @@ Library functions treat non-array objects as if they were equivalent to 0-dimens
   (ao:recycle 4 :inner '(2 2)) ; => #2A((4 4) (4 4))
 #+END_SRC
 
+** Stacking
+
+You can also stack compatible arrays along any axis:
+#+BEGIN_SRC lisp
+  (defparameter *a1* #(0 1 2))
+  (defparameter *a2* #(3 5 7))
+  (ao:stack 0 *a1* *a2*) ; => #(0 1 2 3 5 7)
+  (ao:stack 1
+            (ao:reshape-col *a1*)
+            (ao:reshape-col *a2*)) ; => #2A((0 3) (1 5) (2 7))
+  
+#+END_SRC
+
 ** Shared structure
 
 *Rules for that aren't finalized yet, see the source.*  Suggestions are welcome.
