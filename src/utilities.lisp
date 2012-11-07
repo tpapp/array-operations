@@ -17,7 +17,6 @@
              (equal dimensions (array-dimensions array)))
            arrays)))
 
-
 (defun ensure-dimensions (object)
   "Return a list of dimensions corresponding to OBJECT.  Positive integers are
 treated as dimensions of rank 1, lists are returned as they are, and arrays
