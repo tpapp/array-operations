@@ -5,6 +5,7 @@
 
 =array-operations= is a Common Lisp library that facilitates working with Common Lisp arrays using syntax and semantics that work well with the rest of the language.
 
+/The library previously available under this name is deprecated, but you can find it [[https://github.com/tpapp/array-operations-old][here]]./
 
 
 * A quick tour of the library
