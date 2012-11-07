@@ -1,4 +1,4 @@
-| This is an alpha release.  All the code works and unit tests are expected to run perfectly, but the operations are not optimized and the API might experience changes |
+| This is an *alpha* release.  All the code works and unit tests are expected to run perfectly, but the operations are not optimized and the API change. |
 
 
 * Introduction
@@ -100,7 +100,7 @@ You can use =t= for one of the dimensions, to be filled in automatically:
 Functions in the library accept the following in place of dimensions:
 - a list of dimensions (as for =make-array=),
 - a positive integer, which is used as a single-element list,
-- another array, the dimensions of which are used
+- another array, the dimensions of which are used.
 
 The last one allows you to specify dimensions with other arrays.  For example, to reshape an array =a1= to look like =a2=, you can use
 #+BEGIN_SRC lisp
@@ -115,7 +115,7 @@ instead of the longer form
 
 When the resulting element type cannot be inferred, functions that create and transform arrays are provided in pairs: one of these will allow you to specify the array-element-type of the result, while the other assumes it is =t=.  The former ends with a =*=, and the =element-type= is always its first argument.  I give examples for the versions without =*=, use the other when you are optimizing your code and you are sure you can constrain to a given element-type.
 
-Element traversal order of these functions is /unspecified/.  The reason for this is that the library may use parallel code in the future, so it is unsafe to rely on a particular element traversal order.
+*Element traversal order of these functions is unspecified*.  The reason for this is that the library may use parallel code in the future, so it is unsafe to rely on a particular element traversal order.
 
 =generate= (and =generate*=) allow you to generate arrays using functions.
 #+BEGIN_SRC lisp
@@ -144,8 +144,7 @@ The semantics of =margin= are more difficult to explain, so perhaps an example w
                (reduce #'+ column))
              #2A((0 1)
                  (2 3)
-                 (5 7))
-             0) ; => #(7 11)
+                 (5 7)) 0) ; => #(7 11)
 #+END_SRC
 But the function is much more general than this: the arguments =inner= and =outer= allow arbitrary permutations before splitting.
 
@@ -164,7 +163,7 @@ Library functions treat non-array objects as if they were equivalent to 0-dimens
 
 ** Shared structure
 
-*Rules for that aren't finalized yet, see source.*
+*Rules for that aren't finalized yet, see the source.*  Suggestions are welcome.
 
 * To-do list
 ** benchmark and optimize walk-subscripts and walk-subscripts-list
