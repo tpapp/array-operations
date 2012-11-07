@@ -170,34 +170,39 @@ that element is not an array, the original ARRAY is returned as it is."
   "If one of the dimensions is missing (indicated with T), replace it with a
 dimension so that the total product equals SIZE.  If that's not possible,
 signal an error.  If there are no missing dimensions, just check that the
-product equals size."
-  (let+ ((dimensions (ensure-list dimensions))
-         ((&flet missing? (dimension) (eq dimension t)))
-         missing
-         (product 1))
-    (mapc (lambda (dimension)
-            (if (missing? dimension)
-                (progn
-                  (assert (not missing) () "More than one missing dimension.")
-                  (setf missing t))
-                (progn
-                  (check-type dimension (integer 1))
-                  (multf product dimension))))
-          dimensions)
-    (if missing
-        (let+ (((&values fraction remainder) (floor size product)))
-          (assert (zerop remainder) ()
-                  "Substitution does not result in an integer.")
-          (mapcar (lambda (dimension)
-                    (if (missing? dimension) fraction dimension))
-                  dimensions))
-        dimensions)))
+product equals size.  Also accepts other dimension specifications (integer,
+array)."
+  (aetypecase dimensions
+    ((integer 0) (assert (= size it)) (list it))
+    (array (assert (= size (rank it))) (dims it))
+    (list (let+ (((&flet missing? (dimension) (eq dimension t)))
+                 missing
+                 (product 1))
+            (loop for dimension in dimensions
+                  do (if (missing? dimension)
+                         (progn
+                           (assert (not missing) ()
+                                   "More than one missing dimension.")
+                           (setf missing t))
+                         (progn
+                           (check-type dimension (integer 1))
+                           (multf product dimension))))
+            (if missing
+                (let+ (((&values fraction remainder) (floor size product)))
+                  (assert (zerop remainder) ()
+                          "Substitution does not result in an integer ~
+                          dimension.")
+                  (mapcar (lambda (dimension)
+                            (if (missing? dimension) fraction dimension))
+                          dimensions))
+                dimensions)))))
 
 (defun reshape (array dimensions &optional (offset 0))
-  "Reshape ARRAY using DIMENSIONS, one of which may be T which is calculated
-on demand."
+  "Reshape ARRAY using DIMENSIONS (which can also be dimension
+specifications).  If DIMENSIONS is a list, it may contain a single element T
+which will be calculated to match the total size of the resulting array."
   (let* ((size (array-total-size array))
-         (dimensions (fill-in-dimensions (ensure-dimensions dimensions) (- size offset))))
+         (dimensions (fill-in-dimensions dimensions (- size offset))))
     (displace array dimensions offset)))
 
 (defun reshape-col (array)
