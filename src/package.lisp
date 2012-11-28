@@ -37,6 +37,7 @@
    #:invert-permutation
    #:identity-permutation?
    #:permute
+   #:transpose
    #:each*
    #:each
    #:margin*
