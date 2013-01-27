@@ -42,7 +42,9 @@
    #:each
    #:margin*
    #:margin
-   #:recycle)
+   #:recycle
+   #:outer*
+   #:outer)
   (:export ; stack
    #:stack*
    #:stack))

@@ -204,3 +204,20 @@ as rank 0 arrays, following the usual semantics."
             (make-array (append outer inner) :initial-element object
                                              :element-type element-type)))
       object))
+
+;;; outer produce
+(defun outer* (element-type function &rest arrays)
+  "Generalized outer product of ARRAYS with FUNCTION.  The resulting array has the concatenated dimensions of ARRAYS, and the given ELEMENT-TYPE."
+  (assert arrays)
+  (let* ((result (make-array (mapcan #'dims arrays) :element-type element-type))
+         (vectors (mapcar #'flatten arrays))
+         (flat-dimensions (mapcar #'length vectors))
+         (flat-result (reshape result flat-dimensions)))
+    (walk-subscripts (flat-dimensions subscripts position)
+      (setf (row-major-aref flat-result position)
+            (apply function (map 'list #'aref vectors subscripts))))
+    result))
+
+(defun outer (function &rest arrays)
+  "Like OUTER, with ELEMENT-TYPE t."
+  (apply #'outer* t function arrays))
