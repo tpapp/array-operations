@@ -11,9 +11,7 @@
 (defun run (&optional interactive?)
   "Run all the tests for LLA."
   (run-suite 'tests :use-debugger interactive?))
-
 
-
 ;;; utilities
 
 (deftest walk-subscripts (tests)
@@ -27,9 +25,7 @@
                      (4 . #(1 1))
                      (5 . #(1 2)))
         (reverse result))))
-
 
-
 ;;; displacement
 
 (deftest displacement (tests)
@@ -77,9 +73,7 @@
     (assert-equalp #2A((0 1 2) (3 4 5)) (ao:reshape a '(2 3)))
     (assert-equalp #2A((0 1 2 3 4 5)) (ao:reshape-row a))
     (assert-equalp #2A((0) (1) (2) (3) (4) (5)) (ao:reshape-col a))))
-
 
-
 ;;; transformations
 
 (deftest generate (tests)
@@ -96,8 +90,7 @@
       (ao:generate #'cons '(1 2) :position-and-subscripts))))
 
 (defun permute% (subscripts-mapping array)
-  "Helper function for testing permutation.  Permutes ARRAY using
-SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
+  "Helper function for testing permutation.  Permutes ARRAY using SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
   (let+ ((dimensions (array-dimensions array))
          ((&flet map% (subscripts)
             (apply subscripts-mapping subscripts))))
