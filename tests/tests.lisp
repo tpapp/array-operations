@@ -158,8 +158,23 @@ SUBSCRIPTS-MAPPING, should return the permuted arguments as a list."
     (assert-equalp (ao:generate (lambda (p) (rem p 6)) '(2 2 3 1) :position)
         (ao:recycle a :inner 1 :outer 2))))
 
+(deftest outer (tests)
+  (let ((a #(2 3 5))
+        (b #(7 11))
+        (c #2A((7 11)
+               (13 17))))
+    (assert-equalp #2A((14 22)
+                       (21 33)
+                       (35 55))
+      (ao:outer #'* a b))
+    (assert-equalp #3A(((14 21 35) (22 33 55))
+                       ((26 39 65) (34 51 85)))
+      (ao:outer #'* c a))
+    (assert-equalp (ao:combine (ao:each (lambda (v)
+                                          (ao:each (curry #'* v) c))
+                                        a))
+      (ao:outer #'* a c))))
 
-
 ;;; stack
 
 (deftest stack0 (tests)
