@@ -2,7 +2,7 @@
 
 (defpackage #:array-operations
   (:use #:cl #:alexandria #:anaphora #:let-plus)
-  (:nicknames #:ao)
+  (:nicknames #:aops)
   (:shadow #:flatten)
   (:export ; utilities
    #:walk-subscripts
