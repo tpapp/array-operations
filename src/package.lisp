@@ -7,13 +7,15 @@
   (:export ; utilities
    #:walk-subscripts
    #:walk-subscripts-list)
-  (:export ; displacement
+  (:export ; general
    #:size
    #:rank
    #:dim
    #:dims
    #:nrow
    #:ncol
+   #:as-array)
+  (:export ; displacement
    #:displace
    #:flatten
    #:split
