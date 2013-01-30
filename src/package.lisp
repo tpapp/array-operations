@@ -20,7 +20,8 @@
    #:dims
    #:nrow
    #:ncol
-   #:as-array)
+   #:as-array
+   #:&dims)
   (:export ; displacement
    #:displace
    #:flatten

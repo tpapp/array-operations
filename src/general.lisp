@@ -65,3 +65,9 @@ When the second value is T, the array itself does not share structure with OBJEC
   "Square matrix type (rank 2 array with equal dimensions."
   `(and (matrix ,element-type ,dimension ,dimension)
         (satisfies square-matrix?)))
+
+(define-let+-expansion (&dims dimensions :value-var value-var
+                                         :body-var body-var)
+  "Dimensions of array-like object."
+  `(let+ ((,dimensions (dims ,value-var)))
+     ,@body-var))
