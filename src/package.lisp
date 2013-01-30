@@ -9,6 +9,8 @@
    #:walk-subscripts-list)
   (:export ; general
    #:matrix
+   #:square-matrix?
+   #:square-matrix
    #:size
    #:rank
    #:dim

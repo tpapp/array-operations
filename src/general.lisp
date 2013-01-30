@@ -8,6 +8,16 @@
   "Matrix type (shorthand for a rank 2 array)."
   `(array ,element-type (,nrow ,ncol)))
 
+(declaim (inline square-matrix?))
+(defun square-matrix? (matrix)
+  (and (= (array-rank matrix) 2)
+       (= (array-dimension matrix 0) (array-dimension matrix 1))))
+
+(deftype square-matrix (&optional element-type dimension)
+  "Square matrix type (rank 2 array with equal dimensions."
+  `(and (matrix ,element-type ,dimension ,dimension)
+        (satisfies square-matrix?)))
+
 (declaim (inline size rank dim dims nrow ncol))
 
 (defun size (array)
