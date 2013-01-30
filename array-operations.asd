@@ -11,6 +11,7 @@
   :pathname #P"src/"
   :components ((:file "package")
                (:file "utilities")
+               (:file "general")
                (:file "displacement")
                (:file "transformations")
                (:file "stack")))
