@@ -1,7 +1,10 @@
 ;;;; package.lisp
 
 (defpackage #:array-operations
-  (:use #:cl #:alexandria #:anaphora #:let-plus)
+  (:use #:cl
+        #:alexandria
+        #:anaphora
+        #:let-plus)
   (:nicknames #:aops)
   (:shadow #:flatten)
   (:export ; utilities
