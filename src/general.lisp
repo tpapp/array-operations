@@ -4,6 +4,10 @@
 
 ;;; shorthand functions
 
+(deftype matrix (&optional element-type nrow ncol)
+  "Matrix type (shorthand for a rank 2 array)."
+  `(array ,element-type (,nrow ,ncol)))
+
 (declaim (inline size rank dim dims nrow ncol))
 
 (defun size (array)

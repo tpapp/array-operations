@@ -8,6 +8,7 @@
    #:walk-subscripts
    #:walk-subscripts-list)
   (:export ; general
+   #:matrix
    #:size
    #:rank
    #:dim
