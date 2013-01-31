@@ -11,46 +11,52 @@ When the second value is T, the array itself does not share structure with OBJEC
   (:method ((array array))
     array))
 
-(defmacro define-array-function (name (array-argument &rest other-arguments) &body body)
-  "Define a generic function with two methods:
+(defgeneric dims (array)
+  (:documentation "Return a list of dimensions.
 
-  1. one specializing the first argument to arrays, calling body
+For non-array objects, SIZE, DIM, NROW and NCOL use this method by default, so it is enough to define it (unless efficiency is a concern).")
+  (:method ((array array))
+    (array-dimensions array)))
 
-  2. the converting the first argument with as-array and calling the function with that, other arguments unchanged."
-  (let+ (((&values body declarations docstring) (parse-body body :documentation t)))
-    `(defgeneric ,name (,array-argument ,@other-arguments)
-       ,@(when docstring `((:documentation ,docstring)))
-       (:method ((,array-argument array) ,@other-arguments)
-         ,@declarations
-         ,@body)
-       (:method (,array-argument ,@other-arguments)
-         (,name (as-array ,array-argument) ,@other-arguments)))))
+(defgeneric size (array)
+  (:documentation "Return the total number of elements in array.")
+  (:method ((array array))
+    (array-total-size array))
+  (:method (array)
+    (reduce #'* (dims array))))
 
-(define-array-function size (array)
-  "Return the total size of ARRAY."
-  (array-total-size array))
+(defgeneric rank (array)
+  (:documentation "Return the rank of ARRAY.")
+  (:method ((array array))
+    (array-rank array))
+  (:method (array)
+    (length (dims array))))
 
-(define-array-function rank (array)
-  "Return the rank of ARRAY."
-  (array-rank array))
+(defgeneric dim (array axis)
+  (:documentation "Return specificed dimension of ARRAY.")
+  (:method ((array array) axis)
+    (array-dimension array axis))
+  (:method (array axis)
+    ;; NOTE: ELT is preferred to NTH here because it signals an error for invalid axes
+    (elt (dims array) axis)))
 
-(define-array-function dim (array axis)
-  "Return specificed dimension of ARRAY."
-  (array-dimension array axis))
+(defgeneric nrow (array)
+  (:documentation "Number of rows.  Will signal an error if ARRAY is not a matrix.")
+  (:method ((array array))
+    (assert (= (rank array) 2))
+    (array-dimension array 0))
+  (:method (array)
+    (let+ (((nrow &ign) (dims array)))
+      nrow)))
 
-(define-array-function dims (array)
-  "Return the list of dimensions."
-  (array-dimensions array))
-
-(define-array-function nrow (array)
-  "Number of rows.  Will signal an error if ARRAY is not a matrix."
-  (assert (= (rank array) 2))
-  (dim array 0))
-
-(define-array-function ncol (array)
-  "Number of columns.  Will signal an error if ARRAY is not a matrix."
-  (assert (= (rank array) 2))
-  (dim array 1))
+(defgeneric ncol (array)
+  (:documentation "Number of columns.  Will signal an error if ARRAY is not a matrix.")
+  (:method ((array array))
+    (assert (= (rank array) 2))
+    (array-dimension array 1))
+  (:method (array)
+    (let+ (((&ign ncol) (dims array)))
+      ncol)))
 
 (deftype matrix (&optional element-type nrow ncol)
   "Matrix type (shorthand for a rank 2 array)."
