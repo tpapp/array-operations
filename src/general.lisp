@@ -14,9 +14,13 @@ When the second value is T, the array itself does not share structure with OBJEC
 (defgeneric dims (array)
   (:documentation "Return a list of dimensions.
 
-For non-array objects, SIZE, DIM, NROW and NCOL use this method by default, so it is enough to define it (unless efficiency is a concern).")
+For non-array objects, SIZE, DIM, NROW and NCOL use this method by default, so it is enough to define it (unless efficiency is a concern).
+
+When DIMS is not defined for an object, it falls back to as-array, which may be very inefficient for objects which need to be consed.  It is always advisable to define DIMS.")
   (:method ((array array))
-    (array-dimensions array)))
+    (array-dimensions array))
+  (:method (array)
+    (array-dimensions (as-array array))))
 
 (defgeneric size (array)
   (:documentation "Return the total number of elements in array.")
