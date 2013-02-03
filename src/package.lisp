@@ -11,18 +11,18 @@
    #:walk-subscripts
    #:walk-subscripts-list)
   (:export ; general
-   #:matrix
-   #:square-matrix?
-   #:square-matrix
+   #:as-array
    #:element-type
+   #:dims
+   #:dim
+   #:&dims
    #:size
    #:rank
-   #:dim
-   #:dims
    #:nrow
    #:ncol
-   #:as-array
-   #:&dims)
+   #:matrix
+   #:square-matrix?
+   #:square-matrix)
   (:export ; displacement
    #:displace
    #:flatten
