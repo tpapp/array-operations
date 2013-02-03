@@ -14,6 +14,7 @@
    #:matrix
    #:square-matrix?
    #:square-matrix
+   #:element-type
    #:size
    #:rank
    #:dim

@@ -11,6 +11,17 @@ When the second value is T, the array itself does not share structure with OBJEC
   (:method ((array array))
     array))
 
+(defgeneric element-type (array)
+  (:documentation "Return TYPE such that
+
+1. all elements of ARRAY are guaranteed to be a subtype of TYPE,
+
+2. if applicable, elements of ARRAY can be set to values which are of a type that is a subtype of TYPE.")
+  (:method ((array array))
+    (array-element-type array))
+  (:method (array)
+    (array-element-type (as-array array))))
+
 (defgeneric dims (array)
   (:documentation "Return a list of dimensions.
 
