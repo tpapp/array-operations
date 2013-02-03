@@ -3,6 +3,12 @@
 (in-package #:array-operations)
 
 ;;; shorthand functions
+;;;
+;;; In order to have the library functions work on objects other than arrays,
+;;;
+;;; 1. AS-ARRAY _must_ be defined,
+;;; 2. ELEMENT-TYPE and DIMS _should_ be defined when AS-ARRAY is costly (eg conses),
+;;; 3. all the other methods are optional as they fall back to DIMS.
 
 (defgeneric as-array (object)
   (:documentation "Return the contents of OBJECT as an array.  Exact semantics depends on OBJECT, but generally objects which contain elements in a rectilinear coordinate system should have a natural mapping to arrays.
@@ -32,6 +38,12 @@ When DIMS is not defined for an object, it falls back to as-array, which may be 
     (array-dimensions array))
   (:method (array)
     (array-dimensions (as-array array))))
+
+(define-let+-expansion (&dims dimensions :value-var value-var
+                                         :body-var body-var)
+  "Dimensions of array-like object."
+  `(let+ ((,dimensions (dims ,value-var)))
+     ,@body-var))
 
 (defgeneric size (array)
   (:documentation "Return the total number of elements in array.")
@@ -73,25 +85,16 @@ When DIMS is not defined for an object, it falls back to as-array, which may be 
     (let+ (((&ign ncol) (dims array)))
       ncol)))
 
-(deftype matrix (&optional element-type nrow ncol)
-  "Matrix type (shorthand for a rank 2 array)."
-  `(array ,element-type (,nrow ,ncol)))
+(declaim (inline matrix? square-matrix?))
+(defun matrix? (matrix)
+  "Test if MATRIX has rank 2."
+  (length= (dims matrix) 2))
 
-(declaim (inline square-matrix?))
 (defun square-matrix? (matrix)
-  (and (= (array-rank matrix) 2)
-       (= (array-dimension matrix 0) (array-dimension matrix 1))))
-
-(deftype square-matrix (&optional element-type dimension)
-  "Square matrix type (rank 2 array with equal dimensions."
-  `(and (matrix ,element-type ,dimension ,dimension)
-        (satisfies square-matrix?)))
-
-(define-let+-expansion (&dims dimensions :value-var value-var
-                                         :body-var body-var)
-  "Dimensions of array-like object."
-  `(let+ ((,dimensions (dims ,value-var)))
-     ,@body-var))
+  "Test if MATRIX has two dimensions and that they are equal."
+  (let+ (((&accessors-r/o dims) matrix))
+    (and (length= dims 2)
+         (= (first dims) (second dims)))))
 
 (defun make-array-like (array &key (dimensions (dims array))
                                    (element-type (element-type array))

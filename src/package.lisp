@@ -14,15 +14,14 @@
    #:as-array
    #:element-type
    #:dims
-   #:dim
-   #:&dims
    #:size
    #:rank
+   #:dim
+   #:&dims
    #:nrow
    #:ncol
-   #:matrix
+   #:matrix?
    #:square-matrix?
-   #:square-matrix
    #:make-array-like)
   (:export ; displacement
    #:displace
@@ -58,4 +57,5 @@
    #:outer)
   (:export ; stack
    #:stack*
-   #:stack))
+   #:stack
+   #:matrix?))
