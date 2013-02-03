@@ -22,7 +22,8 @@
    #:ncol
    #:matrix
    #:square-matrix?
-   #:square-matrix)
+   #:square-matrix
+   #:make-array-like)
   (:export ; displacement
    #:displace
    #:flatten
