@@ -136,13 +136,7 @@ Array element type is preserved."
               (setf (apply #'aref it (map-subscripts subscripts))
                     (row-major-aref array position))))))))
 
-(defgeneric transpose (array)
-  (:documentation  "Transpose array.")
-  (:method ((array array))
-    (permute '(1 0) array)))
-
 
-
 ;;; margin
 
 (defun each* (element-type function array &rest other-arrays)
