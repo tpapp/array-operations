@@ -58,5 +58,4 @@
    #:outer)
   (:export ; stack
    #:stack*
-   #:stack
-   #:matrix?))
+   #:stack))
