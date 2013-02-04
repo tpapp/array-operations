@@ -20,6 +20,7 @@
    #:&dims
    #:nrow
    #:ncol
+   #:array-matrix
    #:matrix?
    #:square-matrix?
    #:make-array-like)

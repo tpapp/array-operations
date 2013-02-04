@@ -85,6 +85,10 @@ When DIMS is not defined for an object, it falls back to as-array, which may be 
     (let+ (((&ign ncol) (dims array)))
       ncol)))
 
+(deftype array-matrix ()
+  "A rank-2 array."
+  '(array * (* *)))
+
 (declaim (inline matrix? square-matrix?))
 (defun matrix? (matrix)
   "Test if MATRIX has rank 2."
