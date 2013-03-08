@@ -170,6 +170,28 @@
 
 ;;; stack
 
+(deftest stack-rows (tests)
+  (let ((a 1)
+        (b #(2 3))
+        (c #2A((4 5)
+               (6 7))))
+    (assert-equalp #2A((1 1)
+                       (2 3)
+                       (4 5)
+                       (6 7))
+      (aops:stack-rows a b c))
+    (assert-equalp #2A((2 3)
+                       (1 1)
+                       (4 5)
+                       (6 7))
+      (aops:stack-rows b a c))
+    (assert-equalp #2A((4 5)
+                       (6 7)
+                       (1 1)
+                       (2 3))
+      (aops:stack-rows c a b))
+    (assert-equalp #2A((1) (2) (3)) (aops:stack-rows 1 2 3))))
+
 (deftest stack0 (tests)
   (assert-equalp #(0 1 2 3 4 5 6) (aops:stack 0 #(0 1 2 3) #(4 5 6)))
   (assert-equalp #2A((0 1)

@@ -57,5 +57,9 @@
    #:outer*
    #:outer)
   (:export ; stack
+   #:copy-row-major-block
+   #:stack-rows-copy
+   #:stack-rows*
+   #:stack-rows
    #:stack*
    #:stack))
