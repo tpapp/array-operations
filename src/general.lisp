@@ -15,7 +15,9 @@
 
 When the second value is T, the array itself does not share structure with OBJECT, but its elements may.  Otherwise, it is indeterminate whether the two objects share structure, and consequences of modifying the result are not defined.  Methods are encouraged but not required to return a second value.")
   (:method ((array array))
-    array))
+    array)
+  (:method (object)
+    (make-array nil :initial-element object)))
 
 (defgeneric element-type (array)
   (:documentation "Return TYPE such that
