@@ -4,7 +4,8 @@
   (:use #:cl
         #:alexandria
         #:anaphora
-        #:let-plus)
+        #:let-plus
+        #:optima)
   (:nicknames #:aops)
   (:shadow #:flatten)
   (:export ; utilities

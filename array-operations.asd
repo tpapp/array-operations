@@ -7,7 +7,8 @@
   :license "Boost Software License - Version 1.0"
   :depends-on (#:alexandria
                #:anaphora
-               #:let-plus)
+               #:let-plus
+               #:optima)
   :pathname #P"src/"
   :components ((:file "package")
                (:file "utilities")
