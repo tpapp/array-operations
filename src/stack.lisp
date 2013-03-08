@@ -59,8 +59,8 @@ When applicable, compatibility of dimensions is checked, and the result is used 
                                                       d0))))
                                    (prog1 (cons nrow dims)
                                      (incf nrow increment))))
-                               objects)))
-    (unless ncol (setf ncol 1))         ; only atoms
+                               objects))
+         (ncol (aif ncol it 1)))
     (aprog1 (make-array (list nrow ncol) :element-type element-type)
       (mapc (lambda+ ((start-row &rest dims) object)
               (if dims
