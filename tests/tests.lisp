@@ -190,7 +190,8 @@
                        (1 1)
                        (2 3))
       (aops:stack-rows c a b))
-    (assert-equalp #2A((1) (2) (3)) (aops:stack-rows 1 2 3))))
+    (assert-equalp #2A((1) (2) (3)) (aops:stack-rows 1 2 3))
+    (assert-condition error (aops:stack-rows #2A((1)) c))))
 
 (deftest stack0 (tests)
   (assert-equalp #(0 1 2 3 4 5 6) (aops:stack 0 #(0 1 2 3) #(4 5 6)))
