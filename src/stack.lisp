@@ -73,6 +73,74 @@ When applicable, compatibility of dimensions is checked, and the result is used 
   "Like STACK-ROWS*, with ELEMENT-TYPE T."
   (apply #'stack-rows* t objects))
 
+(defgeneric stack-cols-copy (source destination element-type start-col)
+  (:documentation "Method used to implement the copying of objects in STACK-COL*, by copying the elements of SOURCE to DESTINATION, starting with the column index START-COL in the latter.  Elements are coerced to ELEMENT-TYPE.
+
+This method is only called when (DIMS SOURCE) was non-nil.  It is assumed that it only changes elements in DESTINATION which are supposed to be copies of SOURCE.  DESTINATION is always a matrix with element-type upgraded from ELEMENT-TYPE, and its NROW should match the relevant dimension of SOURCE.
+
+All objects have a fallback method, defined using AS-ARRAY.  The only reason for definining a method is efficiency.")
+  (:method (source destination element-type start-col)
+    (stack-cols-copy (as-array source) destination element-type start-col))
+  (:method ((source array) destination element-type start-col)
+    (ematch (dims source)
+      ((list _)
+       (loop for row below (nrow destination)
+             do (setf (aref destination row start-col)
+                      (coerce (aref source row) element-type))))
+      ((list _ ncol)
+       (loop for row below (nrow destination)
+             for source-start by ncol
+             do (copy-row-major-block source destination element-type
+                                      :source-start source-start
+                                      :source-end (+ source-start ncol)
+                                      :destination-start (array-row-major-index
+                                                          destination
+                                                          row start-col)))))))
+
+(defun stack-cols* (element-type &rest objects)
+  "Stack OBJECTS column-wise into an array of the given ELEMENT-TYPE, coercing if necessary.  Always return a simple array of rank 2.
+
+How objects are used depends on their dimensions, queried by DIMS:
+
+- when the object has 0 dimensions, fill a column with the element.
+
+- when the object has 1 dimension, use it as a column.
+
+- when the object has 2 dimensions, use it as a matrix.
+
+When applicable, compatibility of dimensions is checked, and the result is used to determine the number of rows.  When all objects have 0 dimensions, the result has one row."
+  (let+ (nrow
+         ((&flet check-nrow (dim)
+            (if nrow
+                (assert (= nrow dim))
+                (setf nrow dim))))
+         (ncol 0)
+         (start-cols-and-dims (mapcar
+                               (lambda (object)
+                                 (let* ((dims (dims object))
+                                        (increment (ematch dims
+                                                     (nil 1)
+                                                     ((list d0) (check-nrow d0)
+                                                      1)
+                                                     ((list d0 d1) (check-nrow d0)
+                                                      d1))))
+                                   (prog1 (cons ncol dims)
+                                     (incf ncol increment))))
+                               objects))
+         (nrow (aif nrow it 1)))
+    (aprog1 (make-array (list nrow ncol) :element-type element-type)
+      (mapc (lambda+ ((start-col &rest dims) object)
+              (if dims
+                  (stack-cols-copy object it element-type start-col)
+                  (loop for row below nrow
+                        with object = (coerce object element-type)
+                        do (setf (aref it row start-col) object))))
+            start-cols-and-dims objects))))
+
+(defun stack-cols (&rest objects)
+  "Like STACK-COLS*, with ELEMENT-TYPE T."
+  (apply #'stack-cols* t objects))
+
 (defun stack*0 (element-type arrays)
   "Stack arrays along the 0 axis, returning an array with given ELEMENT-TYPE."
   (let+ ((array-first (car arrays))
