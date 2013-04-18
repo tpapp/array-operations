@@ -38,6 +38,7 @@
    #:reshape-col
    #:reshape-row)
   (:export ; transformations
+   #:coercing
    #:generate*
    #:generate
    #:permutation-repeated-index

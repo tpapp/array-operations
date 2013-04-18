@@ -76,6 +76,14 @@
 
 ;;; transformations
 
+(deftest coercing (tests)
+  (assert-equality (curry #'every #'eql)
+      #(1d0 2d0 3d0)
+      (map 'vector (aops:coercing 'double-float) #(1 2 3)))
+  (assert-equality (curry #'every #'eql)
+      #(1d0 4d0 9d0)
+      (map 'vector (aops:coercing 'double-float (lambda (x) (* x x))) #(1 2 3))))
+
 (deftest generate (tests)
   (let ((a (aops:generate #'identity '(3 2) :position))
         (b (aops:generate #'identity '(2 3) :subscripts)))

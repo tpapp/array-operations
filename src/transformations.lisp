@@ -2,6 +2,13 @@
 
 (in-package #:array-operations)
 
+;;; coercing can be used with * forms
+
+(defun coercing (element-type &optional (function #'identity))
+  "Return a function composed of a univariate function that coerces to ELEMENT-TYPE and function.  When FUNCTION is not given, return a closure that coerces to ELEMENT-TYPE."
+  (compose (lambda (value) (coerce value element-type))
+           function))
+
 ;;; creating arrays
 
 (defun generate* (element-type function dimensions &optional arguments)
