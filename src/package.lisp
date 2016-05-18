@@ -5,7 +5,7 @@
         #:alexandria
         #:anaphora
         #:let-plus
-        #:optima)
+        #:trivia)
   (:nicknames #:aops)
   (:shadow #:flatten)
   (:export ; utilities
