@@ -8,7 +8,7 @@
   :depends-on (#:alexandria
                #:anaphora
                #:let-plus
-               #:optima)
+               #:trivia)
   :pathname #P"src/"
   :components ((:file "package")
                (:file "utilities")
