@@ -4,7 +4,7 @@
   :serial t
   :description "Simple array operations library for Common Lisp."
   :author "Tamas K. Papp <tkpapp@gmail.com>"
-  :license "Boost Software License - Version 1.0"
+  :license "MIT"
   :depends-on (#:alexandria
                #:anaphora
                #:let-plus
@@ -21,7 +21,7 @@
   :serial t
   :description "Unit tests for the ARRAY-OPERATIONS library."
   :author "Tamas K. Papp <tkpapp@gmail.com>"
-  :license "Boost Software License - Version 1.0"
+  :license "MIT"
   :depends-on (#:array-operations       ; loads everything else
                #:clunit)
   :pathname #P"tests/"

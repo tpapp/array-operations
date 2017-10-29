@@ -1,3 +1,6 @@
+#+CAPTION: Project Status: Abandoned – Initial development has started, but there has not yet been a stable, usable release; the project has been abandoned and the author(s) do not intend on continuing development.
+[[http://www.repostatus.org/badges/latest/abandoned.svg]]
+
 | This is an *alpha* release.  All the code works and unit tests are expected to run perfectly, but the operations are not optimized and the API change. |
 
 
