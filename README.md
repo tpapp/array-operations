@@ -4,7 +4,6 @@ abandoned and the author(s) do not intend on continuing
 development.](http://www.repostatus.org/badges/latest/abandoned.svg) This library is [**abandonned**](https://tpapp.github.io/post/orphaned-lisp-libraries/).
 
 !!! important
-
     This is an **alpha** release. All the code works and unit tests are expected to run perfectly, but the operations are not optimized and the API change.
 
 ## Introduction
