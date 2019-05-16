@@ -3,6 +3,10 @@ has not yet been a stable, usable release; the project has been
 abandoned and the author(s) do not intend on continuing
 development.](http://www.repostatus.org/badges/latest/abandoned.svg) This library is [**abandonned**](https://tpapp.github.io/post/orphaned-lisp-libraries/).
 
+## NOTE 2019-05-16
+
+@bendudson and others have continued maintaining a fork of this library at <https://github.com/bendudson/array-operations>.
+
 !!! important
     This is an **alpha** release. All the code works and unit tests are expected to run perfectly, but the operations are not optimized and the API change.
 
