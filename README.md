@@ -1,7 +1,9 @@
 ![Project Status: Abandoned – Initial development has started, but there
 has not yet been a stable, usable release; the project has been
 abandoned and the author(s) do not intend on continuing
-development.](http://www.repostatus.org/badges/latest/abandoned.svg) This library is [**abandonned**](https://tpapp.github.io/post/orphaned-lisp-libraries/).
+development.](http://www.repostatus.org/badges/latest/abandoned.svg)
+
+This library is [**abandonned**](https://tpapp.github.io/post/orphaned-lisp-libraries/) by the original author. A fork is maintained at https://github.com/Lisp-Stat/array-operations.
 
 ## NOTE 2019-05-16
 
